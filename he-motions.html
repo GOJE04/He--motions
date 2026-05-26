@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HE-MOTIONS — A sacred brotherhood where men explore emotions, grow spiritually, and build authentic community. Live sessions every Friday 19:00–20:00.">
+<meta property="og:title" content="HE-MOTIONS | Where Men Are Free to Feel">
+<meta property="og:description" content="Virtual men's gathering exploring emotions from psychological and biblical perspectives. Join us every Friday.">
+<title>HE-MOTIONS | Where Men Are Free to Feel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cinzel:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN SYSTEM
+   ============================================================ */
+:root {
+  --black:   #080808;
+  --void:    #0e0e0f;
+  --coal:    #161618;
+  --stone:   #252527;
+  --ash:     #3a3a3d;
+  --fog:     rgba(255,255,255,0.08);
+  --cream:   #f2ede4;
+  --parchment: #e8dfc8;
+  --gold:    #c9973f;
+  --gold-lt: #e2b96a;
+  --gold-dk: #9c6e24;
+  --ember:   #8b3a1c;
+  --rust:    #b54a28;
+  --sage:    #4a7c6f;
+  --white:   #ffffff;
+
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Cormorant Garamond', serif;
+  --font-ui:      'DM Sans', sans-serif;
+
+  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+  --ease-out:    cubic-bezier(0.22,1,0.36,1);
+  --ease-in-out: cubic-bezier(0.65,0,0.35,1);
+
+  --nav-h: 80px;
+  --radius: 4px;
+  --radius-lg: 12px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+}
+img { display:block; max-width:100%; }
+a { text-decoration:none; color:inherit; }
+button { font-family:inherit; }
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+#cur-dot, #cur-ring {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+}
+#cur-dot {
+  width: 8px; height: 8px;
+  background: var(--gold);
+  top: 0; left: 0;
+  transform: translate(-50%,-50%);
+}
+#cur-ring {
+  width: 40px; height: 40px;
+  border: 1.5px solid rgba(201,151,63,0.5);
+  top: 0; left: 0;
+  transform: translate(-50%,-50%);
+  transition: width .35s var(--ease-out), height .35s var(--ease-out),
+              border-color .35s, background .35s, opacity .3s;
+}
+body:has(a:hover) #cur-ring,
+body:has(button:hover) #cur-ring,
+body:has(.clickable:hover) #cur-ring {
+  width:64px; height:64px;
+  border-color:rgba(201,151,63,0.9);
+  background:rgba(201,151,63,0.06);
+}
+@media (pointer:coarse) { #cur-dot, #cur-ring { display:none; } body { cursor:auto; } }
+
+/* ============================================================
+   CANVAS PARTICLES
+   ============================================================ */
+#particles-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
+
+/* ============================================================
+   NOISE TEXTURE OVERLAY
+   ============================================================ */
+.noise {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   LIVE BANNER
+   ============================================================ */
+.live-banner {
+  position: relative;
+  z-index: 200;
+  background: linear-gradient(90deg, var(--ember), var(--gold-dk), var(--ember));
+  background-size: 200% 100%;
+  animation: bannerSlide 4s linear infinite;
+  padding: .6rem 2rem;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+@keyframes bannerSlide {
+  0%   { background-position:0 0; }
+  100% { background-position:200% 0; }
+}
+.live-pulse {
+  display:inline-flex; align-items:center; gap:.4rem;
+}
+.live-dot {
+  width:7px; height:7px;
+  background:#ff4444;
+  border-radius:50%;
+  animation: livePulse 1.4s ease-in-out infinite;
+  box-shadow: 0 0 8px #ff4444;
+}
+@keyframes livePulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.7);} }
+.banner-join {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff;
+  border-radius:3px;
+  padding:.25rem .9rem;
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.1em;
+  cursor:none;
+  transition: background .3s;
+  text-decoration: none;
+}
+.banner-join:hover { background:rgba(255,255,255,0.3); }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3.5rem;
+  transition: background .5s, backdrop-filter .5s, box-shadow .5s;
+}
+nav.scrolled {
+  background: rgba(8,8,8,0.94);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(201,151,63,.15);
+}
+
+/* ---- LOGO ---- */
+.logo-link { display:flex; align-items:center; gap:14px; }
+.logo-emblem {
+  width:48px; height:48px;
+  position:relative;
+  flex-shrink:0;
+}
+.logo-emblem svg {
+  width:100%; height:100%;
+  filter: drop-shadow(0 0 10px rgba(201,151,63,.45));
+}
+.logo-spin { animation: logospin 25s linear infinite; transform-origin:50% 50%; }
+.logo-pulse { animation: logopulse 3s ease-in-out infinite; }
+@keyframes logospin  { to { transform: rotate(360deg); } }
+@keyframes logopulse { 0%,100%{opacity:.7;} 50%{opacity:1;} }
+
+.logo-words { display:flex; flex-direction:column; line-height:1; }
+.logo-he {
+  font-family: var(--font-display);
+  font-size:1.7rem;
+  font-weight:900;
+  color: var(--gold);
+  letter-spacing:.08em;
+}
+.logo-motions {
+  font-family: var(--font-body);
+  font-weight:300;
+  font-size:.72rem;
+  letter-spacing:.38em;
+  color: rgba(242,237,228,.6);
+  text-transform:uppercase;
+}
+
+/* ---- NAV LINKS ---- */
+.nav-links { display:flex; align-items:center; gap:2.8rem; list-style:none; }
+.nav-links a {
+  font-family: var(--font-ui);
+  font-size:.78rem;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:rgba(242,237,228,.55);
+  position:relative;
+  transition:color .3s;
+}
+.nav-links a::after {
+  content:'';
+  position:absolute;
+  bottom:-4px; left:0;
+  width:0; height:1px;
+  background:var(--gold);
+  transition:width .4s var(--ease-out);
+}
+.nav-links a:hover { color:var(--gold); }
+.nav-links a:hover::after { width:100%; }
+.nav-live-btn {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:transparent;
+  border:1px solid var(--gold);
+  color:var(--gold) !important;
+  padding:.45rem 1.3rem;
+  border-radius:3px;
+  font-family:var(--font-ui) !important;
+  font-size:.76rem !important;
+  font-weight:600;
+  cursor:none;
+  transition:background .3s, color .3s, box-shadow .3s !important;
+  text-transform:uppercase !important;
+  letter-spacing:.12em !important;
+}
+.nav-live-btn::after { display:none !important; }
+.nav-live-btn:hover {
+  background:var(--gold) !important;
+  color:var(--black) !important;
+  box-shadow:0 0 25px rgba(201,151,63,.35) !important;
+}
+.nav-live-btn .live-dot { background:#ff6b6b; box-shadow:0 0 6px #ff6b6b; }
+
+.hamburger {
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:6px;
+}
+.hamburger span {
+  display:block;
+  width:24px; height:1.5px;
+  background:var(--cream);
+  transition:all .4s var(--ease-out);
+  transform-origin:center;
+}
+.hamburger.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2){ opacity:0; transform:scaleX(0); }
+.hamburger.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+
+/* ---- MOBILE DRAWER ---- */
+.mobile-drawer {
+  position:fixed;
+  inset:0;
+  background:rgba(8,8,8,.97);
+  backdrop-filter:blur(20px);
+  z-index:999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2rem;
+  transform:translateX(100%);
+  transition:transform .55s cubic-bezier(.77,0,.175,1);
+}
+.mobile-drawer.open { transform:translateX(0); }
+.mobile-drawer a {
+  font-family:var(--font-display);
+  font-size:clamp(2rem,6vw,3rem);
+  color:var(--cream);
+  letter-spacing:.05em;
+  transition:color .3s, transform .3s;
+}
+.mobile-drawer a:hover { color:var(--gold); transform:translateX(8px); }
+.mobile-close-btn {
+  position:absolute; top:1.5rem; right:1.8rem;
+  background:none; border:1px solid rgba(255,255,255,.15);
+  color:var(--cream); width:40px; height:40px;
+  border-radius:50%; font-size:1.1rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:border-color .3s, color .3s;
+}
+.mobile-close-btn:hover { border-color:var(--gold); color:var(--gold); }
+
+/* ============================================================
+   SECTION UTILITIES
+   ============================================================ */
+.s-pad { padding:9rem 3.5rem; }
+.s-inner { max-width:1280px; margin:0 auto; }
+.overline {
+  font-family:var(--font-ui);
+  font-size:.7rem;
+  letter-spacing:.38em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:.9rem;
+  display:block;
+}
+.headline {
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,5vw,4rem);
+  font-weight:700;
+  line-height:1.1;
+  letter-spacing:-.01em;
+}
+.headline em { color:var(--gold); font-style:normal; }
+.body-text {
+  font-family:var(--font-body);
+  font-size:1.15rem;
+  font-weight:300;
+  line-height:1.9;
+  color:rgba(242,237,228,.65);
+}
+
+/* scroll reveal */
+.r {
+  opacity:0;
+  transform:translateY(36px);
+  transition:opacity .9s var(--ease-out), transform .9s var(--ease-out);
+}
+.r.d1{transition-delay:.1s} .r.d2{transition-delay:.22s}
+.r.d3{transition-delay:.34s} .r.d4{transition-delay:.46s}
+.r.d5{transition-delay:.58s}
+.r.vis { opacity:1; transform:translateY(0); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+  padding:calc(var(--nav-h) + 2rem) 2rem 6rem;
+  overflow:hidden;
+  z-index:2;
+}
+
+/* Radial glow */
+.hero::before {
+  content:'';
+  position:absolute;
+  width:900px; height:900px;
+  background:radial-gradient(ellipse, rgba(201,151,63,.1) 0%, transparent 68%);
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  animation:heroGlow 8s ease-in-out infinite;
+}
+@keyframes heroGlow {
+  0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1);}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}
+}
+
+/* Cross-hatch rule lines */
+.hero-rule {
+  position:absolute;
+  pointer-events:none;
+}
+.hero-rule-h { top:50%; left:0; right:0; height:1px; background:linear-gradient(to right,transparent,rgba(201,151,63,.08),transparent); }
+.hero-rule-v { left:50%; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,transparent,rgba(201,151,63,.08),transparent); }
+
+.hero-badge {
+  display:inline-flex; align-items:center; gap:.6rem;
+  border:1px solid rgba(201,151,63,.3);
+  background:rgba(201,151,63,.06);
+  border-radius:999px;
+  padding:.45rem 1.2rem;
+  font-family:var(--font-ui);
+  font-size:.72rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:rgba(242,237,228,.7);
+  margin-bottom:2.5rem;
+  opacity:0; animation:fadeUp .8s .2s forwards;
+  backdrop-filter:blur(4px);
+}
+.hero-badge .live-dot { width:6px; height:6px; }
+
+.hero-title {
+  font-family:var(--font-display);
+  font-weight:900;
+  line-height:.92;
+  letter-spacing:-.01em;
+  opacity:0; animation:fadeUp 1s .4s forwards;
+}
+.hero-title .big {
+  font-size:clamp(5.5rem,18vw,15rem);
+  color:var(--gold);
+  display:block;
+  text-shadow:0 0 120px rgba(201,151,63,.3);
+  position:relative;
+}
+.hero-title .big::before {
+  content:attr(data-text);
+  position:absolute; inset:0;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(201,151,63,.2);
+  transform:translate(3px,3px);
+}
+.hero-title .sub {
+  display:block;
+  font-size:clamp(2rem,6vw,5rem);
+  color:var(--cream);
+  font-weight:400;
+  letter-spacing:.08em;
+}
+
+.hero-verse {
+  font-family:var(--font-body);
+  font-style:italic;
+  font-size:clamp(1rem,2.2vw,1.3rem);
+  color:rgba(242,237,228,.5);
+  max-width:640px;
+  line-height:1.7;
+  margin:2.5rem auto 0;
+  opacity:0; animation:fadeUp .8s .7s forwards;
+}
+.hero-verse cite {
+  display:block;
+  font-style:normal;
+  font-family:var(--font-ui);
+  font-size:.7rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:rgba(201,151,63,.7);
+  margin-top:.7rem;
+}
+
+.hero-ctas {
+  display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;
+  margin-top:3rem;
+  opacity:0; animation:fadeUp .8s .9s forwards;
+}
+
+.btn-gold {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--gold);
+  color:var(--black);
+  border:none;
+  padding:1.05rem 2.5rem;
+  font-family:var(--font-ui);
+  font-weight:600;
+  font-size:.85rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  border-radius:3px;
+  cursor:none;
+  position:relative; overflow:hidden;
+  transition:transform .3s, box-shadow .3s, background .3s;
+}
+.btn-gold::after {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,.2) 50%,transparent 70%);
+  transform:translateX(-100%);
+  transition:transform .6s;
+}
+.btn-gold:hover { background:var(--gold-lt); transform:translateY(-2px); box-shadow:0 16px 40px rgba(201,151,63,.4); }
+.btn-gold:hover::after { transform:translateX(100%); }
+
+.btn-ghost {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:transparent;
+  color:var(--cream);
+  border:1px solid rgba(242,237,228,.25);
+  padding:1.05rem 2.5rem;
+  font-family:var(--font-ui);
+  font-size:.85rem;
+  font-weight:400;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  border-radius:3px;
+  cursor:none;
+  transition:border-color .3s, color .3s, transform .3s;
+}
+.btn-ghost:hover { border-color:var(--gold); color:var(--gold); transform:translateY(-2px); }
+
+.hero-scroll {
+  position:absolute; bottom:2.5rem; left:50%;
+  transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:.5rem;
+  opacity:0; animation:fadeUp .8s 1.3s forwards;
+}
+.hero-scroll span {
+  font-family:var(--font-ui);
+  font-size:.62rem;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:rgba(242,237,228,.3);
+}
+.scroll-wire {
+  width:1px; height:55px;
+  background:linear-gradient(to bottom,rgba(201,151,63,.8),transparent);
+  animation:scrollDrop 2.2s ease-in-out infinite;
+}
+@keyframes scrollDrop {
+  0%{transform:scaleY(0);transform-origin:top;opacity:1;}
+  50%{transform:scaleY(1);transform-origin:top;opacity:1;}
+  51%{transform:scaleY(1);transform-origin:bottom;}
+  100%{transform:scaleY(0);transform-origin:bottom;opacity:0;}
+}
+
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(28px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ============================================================
+   LIVE SESSION SECTION
+   ============================================================ */
+.session-section {
+  position:relative; z-index:2;
+  background:var(--void);
+  border-top:1px solid rgba(201,151,63,.12);
+  border-bottom:1px solid rgba(201,151,63,.12);
+}
+.session-section .s-inner {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6rem;
+  align-items:center;
+}
+
+/* Invite card */
+.invite-card {
+  background:var(--coal);
+  border:1px solid rgba(201,151,63,.2);
+  border-radius:var(--radius-lg);
+  padding:3rem;
+  position:relative;
+  overflow:hidden;
+}
+.invite-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(to right,var(--ember),var(--gold),var(--gold-lt));
+}
+.invite-card::after {
+  content:'"';
+  font-family:var(--font-display);
+  font-size:18rem;
+  position:absolute; top:-4rem; right:-1rem;
+  color:rgba(201,151,63,.04);
+  line-height:1; pointer-events:none;
+}
+
+.invite-from {
+  display:flex; align-items:center; gap:1rem;
+  margin-bottom:2rem;
+}
+.rev-avatar {
+  width:52px; height:52px;
+  background:linear-gradient(135deg,var(--gold-dk),var(--ember));
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:1.1rem; font-weight:700;
+  color:var(--cream); flex-shrink:0;
+  box-shadow:0 0 20px rgba(201,151,63,.3);
+}
+.rev-info { line-height:1.3; }
+.rev-name {
+  font-family:var(--font-body); font-size:1rem;
+  font-weight:600; color:var(--cream);
+}
+.rev-title {
+  font-family:var(--font-ui); font-size:.72rem;
+  color:rgba(242,237,228,.45); letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+.invite-salutation {
+  font-family:var(--font-body); font-size:1.05rem;
+  color:rgba(242,237,228,.6); margin-bottom:1rem; font-style:italic;
+}
+.invite-body {
+  font-family:var(--font-body); font-size:1.05rem;
+  line-height:1.85; color:rgba(242,237,228,.75);
+  margin-bottom:1.5rem;
+}
+.invite-body strong { color:var(--gold-lt); font-weight:600; }
+
+.invite-details {
+  display:flex; flex-direction:column; gap:.6rem;
+  background:rgba(201,151,63,.06); border:1px solid rgba(201,151,63,.12);
+  border-radius:var(--radius); padding:1.2rem 1.4rem;
+  margin-bottom:1.5rem;
+}
+.detail-row {
+  display:flex; align-items:center; gap:.8rem;
+  font-family:var(--font-ui); font-size:.85rem;
+  color:rgba(242,237,228,.75);
+}
+.detail-icon { font-size:1rem; flex-shrink:0; width:20px; text-align:center; }
+.detail-label { color:rgba(242,237,228,.4); font-size:.75rem; margin-right:.3rem; }
+
+.invite-biblical {
+  background:rgba(74,124,111,.08);
+  border-left:3px solid var(--sage);
+  padding:1.1rem 1.4rem;
+  border-radius:0 var(--radius) var(--radius) 0;
+  margin-bottom:1.8rem;
+}
+.invite-biblical p {
+  font-family:var(--font-body); font-style:italic;
+  font-size:1rem; color:rgba(242,237,228,.7); line-height:1.65;
+}
+.invite-biblical cite {
+  display:block; font-style:normal;
+  font-family:var(--font-ui); font-size:.68rem;
+  letter-spacing:.18em; text-transform:uppercase;
+  color:var(--sage); margin-top:.4rem;
+}
+
+.invite-tagline {
+  font-family:var(--font-body); font-style:italic;
+  font-size:.98rem; color:rgba(201,151,63,.8);
+  line-height:1.6; margin-bottom:1.8rem;
+  border-top:1px solid rgba(201,151,63,.1); padding-top:1.3rem;
+}
+
+.join-meet-btn {
+  display:inline-flex; align-items:center; gap:.7rem;
+  background:linear-gradient(135deg,#1a73e8,#4285f4);
+  color:#fff;
+  border:none;
+  padding:1rem 2rem;
+  border-radius:6px;
+  font-family:var(--font-ui);
+  font-weight:600; font-size:.88rem;
+  letter-spacing:.06em;
+  cursor:none;
+  width:100%;
+  justify-content:center;
+  position:relative; overflow:hidden;
+  transition:transform .3s, box-shadow .3s;
+  text-decoration:none;
+}
+.join-meet-btn::before {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);
+  transform:translateX(-100%); transition:transform .6s;
+}
+.join-meet-btn:hover { transform:translateY(-2px); box-shadow:0 12px 35px rgba(26,115,232,.45); }
+.join-meet-btn:hover::before { transform:translateX(100%); }
+.meet-icon { font-size:1.2rem; }
+
+/* Countdown panel */
+.countdown-panel { display:flex; flex-direction:column; gap:2.5rem; }
+.countdown-panel .overline { color:var(--rust); }
+
+.next-session-label {
+  font-family:var(--font-body);
+  font-style:italic;
+  font-size:1.1rem;
+  color:rgba(242,237,228,.5);
+  margin-top:-.5rem;
+}
+
+.countdown-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1rem;
+}
+.cd-box {
+  background:var(--coal);
+  border:1px solid rgba(201,151,63,.18);
+  border-radius:var(--radius);
+  padding:1.5rem 1rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  transition:border-color .3s, transform .3s;
+}
+.cd-box::before {
+  content:'';
+  position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  transform:scaleX(0); transition:transform .4s;
+}
+.cd-box:hover { border-color:rgba(201,151,63,.45); transform:translateY(-3px); }
+.cd-box:hover::before { transform:scaleX(1); }
+.cd-num {
+  font-family:var(--font-display);
+  font-size:3rem; font-weight:700;
+  color:var(--gold); line-height:1;
+  display:block;
+}
+.cd-label {
+  font-family:var(--font-ui);
+  font-size:.62rem; letter-spacing:.22em;
+  text-transform:uppercase;
+  color:rgba(242,237,228,.35);
+  margin-top:.4rem; display:block;
+}
+
+.session-meta {
+  display:flex; flex-direction:column; gap:1rem;
+}
+.meta-item {
+  display:flex; align-items:center; gap:1rem;
+  padding:1rem 1.4rem;
+  background:var(--coal);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--radius);
+  font-family:var(--font-ui);
+  font-size:.88rem;
+}
+.meta-icon { font-size:1.3rem; flex-shrink:0; }
+.meta-text { color:rgba(242,237,228,.7); }
+.meta-text strong { color:var(--cream); }
+.meta-badge {
+  margin-left:auto;
+  background:rgba(201,151,63,.12);
+  border:1px solid rgba(201,151,63,.25);
+  color:var(--gold);
+  font-size:.65rem; letter-spacing:.18em;
+  text-transform:uppercase; padding:.2rem .7rem; border-radius:99px;
+}
+
+/* ============================================================
+   PILLARS
+   ============================================================ */
+.pillars-section { position:relative; z-index:2; }
+
+.pillars-header {
+  max-width:700px; margin:0 auto 5rem; text-align:center;
+}
+
+.pillars-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;
+}
+
+.pillar-card {
+  position:relative;
+  background:var(--void);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--radius-lg);
+  padding:3rem 2.5rem;
+  overflow:hidden;
+  transition:border-color .5s, transform .4s, box-shadow .5s;
+  cursor:none;
+}
+.pillar-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1.5px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  transform:scaleX(0); transition:transform .6s var(--ease-out);
+}
+.pillar-card::after {
+  content:attr(data-num);
+  position:absolute; top:-1rem; right:1.5rem;
+  font-family:var(--font-display);
+  font-size:7rem; font-weight:900; line-height:1;
+  color:rgba(201,151,63,.05);
+  pointer-events:none;
+  transition:color .4s;
+}
+.pillar-card:hover { border-color:rgba(201,151,63,.3); transform:translateY(-6px); box-shadow:0 30px 60px rgba(0,0,0,.4); }
+.pillar-card:hover::before { transform:scaleX(1); }
+.pillar-card:hover::after { color:rgba(201,151,63,.1); }
+
+.pillar-icon-wrap {
+  width:58px; height:58px;
+  border:1px solid rgba(201,151,63,.25);
+  border-radius:var(--radius);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:2rem;
+  font-size:1.6rem;
+  background:rgba(201,151,63,.06);
+  transition:background .3s, border-color .3s, transform .3s;
+}
+.pillar-card:hover .pillar-icon-wrap {
+  background:rgba(201,151,63,.12);
+  border-color:rgba(201,151,63,.5);
+  transform:scale(1.08) rotate(-3deg);
+}
+.pillar-card h3 {
+  font-family:var(--font-display);
+  font-size:1.3rem; font-weight:600;
+  color:var(--cream); margin-bottom:1rem; letter-spacing:.02em;
+}
+.pillar-card p { font-family:var(--font-body); font-size:1.05rem; line-height:1.8; color:rgba(242,237,228,.55); }
+
+/* ============================================================
+   PULL QUOTE
+   ============================================================ */
+.quote-section {
+  position:relative; z-index:2;
+  background:var(--cream);
+  color:var(--black);
+  overflow:hidden;
+}
+.quote-section::before {
+  content:open-quote;
+  font-family:var(--font-display);
+  font-size:50rem; line-height:.8;
+  position:absolute; top:-10rem; left:-4rem;
+  color:rgba(13,13,13,.04); pointer-events:none;
+}
+.quote-inner { max-width:960px; margin:0 auto; text-align:center; }
+.quote-bar {
+  width:48px; height:3px;
+  background:var(--gold); margin:0 auto 2rem;
+}
+.pull-quote {
+  font-family:var(--font-body); font-style:italic;
+  font-size:clamp(1.6rem,4vw,3rem);
+  line-height:1.45; font-weight:300; color:var(--black);
+  margin-bottom:2rem;
+}
+.pull-quote strong { color:var(--gold-dk); font-weight:600; font-style:normal; }
+.quote-attr { font-family:var(--font-ui); font-size:.72rem; letter-spacing:.28em; text-transform:uppercase; color:rgba(13,13,13,.4); }
+
+/* ============================================================
+   PROGRAMS
+   ============================================================ */
+.programs-section { position:relative; z-index:2; background:var(--void); }
+.programs-header { max-width:600px; margin-bottom:5rem; }
+
+.prog-list { display:flex; flex-direction:column; }
+.prog-row {
+  display:grid;
+  grid-template-columns:70px 1fr auto;
+  align-items:center;
+  gap:2.5rem;
+  padding:2.2rem 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  position:relative; cursor:none;
+  transition:padding-left .4s var(--ease-out);
+}
+.prog-row::before {
+  content:'';
+  position:absolute; inset:0;
+  background:rgba(201,151,63,.03);
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .45s var(--ease-out);
+}
+.prog-row:hover::before { transform:scaleX(1); }
+.prog-row:hover { padding-left:.6rem; }
+
+.prog-n {
+  font-family:var(--font-display);
+  font-size:2.2rem; font-weight:700;
+  color:rgba(201,151,63,.2);
+  transition:color .4s; line-height:1; z-index:1;
+}
+.prog-row:hover .prog-n { color:var(--gold); }
+.prog-info { z-index:1; }
+.prog-info h3 {
+  font-family:var(--font-body); font-size:1.3rem;
+  font-weight:600; color:var(--cream); margin-bottom:.3rem;
+}
+.prog-info p { font-family:var(--font-body); font-size:1rem; color:rgba(242,237,228,.45); }
+.prog-tag {
+  font-family:var(--font-ui); font-size:.65rem;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid rgba(201,151,63,.3);
+  padding:.3rem .9rem; border-radius:99px;
+  white-space:nowrap; z-index:1;
+  transition:background .3s, color .3s;
+}
+.prog-row:hover .prog-tag { background:rgba(201,151,63,.1); }
+
+/* ============================================================
+   COMMUNITY / BROTHERHOOD
+   ============================================================ */
+.brotherhood-section { position:relative; z-index:2; overflow:hidden; }
+.brotherhood-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:7rem; align-items:center;
+}
+.brotherhood-visual {
+  position:relative; height:520px;
+}
+.brotherhood-visual-bg {
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at center,rgba(201,151,63,.07),transparent 70%);
+  border-radius:50%;
+}
+
+/* Node network */
+.node-svg { position:absolute; inset:0; }
+
+.avatars-field { position:absolute; inset:0; }
+.av {
+  position:absolute;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; color:var(--gold);
+  background:rgba(201,151,63,.08);
+  border:1.5px solid rgba(201,151,63,.3);
+  animation:avFloat 7s ease-in-out infinite;
+  transition:transform .3s, box-shadow .3s;
+}
+.av::after {
+  content:''; position:absolute; inset:-6px; border-radius:50%;
+  border:1px solid rgba(201,151,63,.12);
+  animation:avRing 3s ease-in-out infinite;
+}
+@keyframes avFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-14px);} }
+@keyframes avRing { 0%,100%{transform:scale(1);opacity:.5;} 50%{transform:scale(1.18);opacity:0;} }
+.av:hover { transform:scale(1.12) !important; box-shadow:0 0 30px rgba(201,151,63,.35); }
+.av.xl { width:88px;height:88px;font-size:1.6rem; }
+.av.lg { width:70px;height:70px;font-size:1.2rem; }
+.av.md { width:54px;height:54px;font-size:.95rem; }
+.av.sm { width:40px;height:40px;font-size:.75rem; }
+
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:3rem; }
+.stat-card {
+  background:var(--coal); border:1px solid rgba(255,255,255,.07);
+  border-radius:var(--radius); padding:1.8rem;
+  transition:border-color .3s, transform .3s;
+}
+.stat-card:hover { border-color:rgba(201,151,63,.3); transform:translateY(-3px); }
+.stat-num { font-family:var(--font-display); font-size:2.8rem; color:var(--gold); line-height:1; }
+.stat-lbl { font-family:var(--font-ui); font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(242,237,228,.35); margin-top:.3rem; }
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.testimonials-section { position:relative; z-index:2; background:var(--void); overflow:hidden; }
+.track-wrap {
+  margin-top:4rem; overflow:hidden;
+  mask-image:linear-gradient(to right,transparent,black 8%,black 92%,transparent);
+}
+.track {
+  display:flex; gap:1.5rem;
+  width:max-content;
+  animation:scroll 35s linear infinite;
+}
+.track:hover { animation-play-state:paused; }
+@keyframes scroll { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+.t-card {
+  width:330px; flex-shrink:0;
+  background:var(--coal); border:1px solid rgba(255,255,255,.07);
+  border-radius:var(--radius-lg); padding:2rem;
+  transition:border-color .3s;
+}
+.t-card:hover { border-color:rgba(201,151,63,.3); }
+.t-stars { color:var(--gold); font-size:.85rem; margin-bottom:1rem; letter-spacing:.1em; }
+.t-text {
+  font-family:var(--font-body); font-style:italic;
+  font-size:1.05rem; line-height:1.7;
+  color:rgba(242,237,228,.7); margin-bottom:1.5rem;
+}
+.t-author { display:flex; align-items:center; gap:.9rem; }
+.t-avatar {
+  width:40px;height:40px; border-radius:50%;
+  background:rgba(201,151,63,.15);
+  border:1px solid rgba(201,151,63,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.85rem;color:var(--gold);font-weight:700;
+}
+.t-name { font-family:var(--font-ui);font-size:.85rem;font-weight:500;color:var(--cream); }
+.t-role { font-family:var(--font-ui);font-size:.7rem;color:rgba(242,237,228,.35);margin-top:1px; }
+
+/* ============================================================
+   VALUES / PRINCIPLES
+   ============================================================ */
+.values-section { position:relative; z-index:2; }
+.values-grid {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:2px;
+  margin-top:4rem;
+}
+.value-item {
+  background:var(--void); border:1px solid rgba(255,255,255,.05);
+  padding:3rem;
+  position:relative; overflow:hidden;
+  transition:background .4s;
+}
+.value-item:hover { background:rgba(201,151,63,.04); }
+.value-item::before {
+  content:'';
+  position:absolute; top:0;left:0;bottom:0;
+  width:3px;
+  background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+  transform:scaleY(0); transform-origin:center;
+  transition:transform .5s var(--ease-out);
+}
+.value-item:hover::before { transform:scaleY(1); }
+.value-num {
+  font-family:var(--font-display);font-size:.8rem;letter-spacing:.25em;
+  color:rgba(201,151,63,.4);margin-bottom:1.2rem;display:block;
+}
+.value-item h3 {
+  font-family:var(--font-body);font-size:1.4rem;font-weight:600;
+  color:var(--cream);margin-bottom:.8rem;
+}
+.value-item p { font-family:var(--font-body);font-size:1rem;line-height:1.8;color:rgba(242,237,228,.5); }
+
+/* ============================================================
+   JOIN CTA
+   ============================================================ */
+.join-section {
+  position:relative; z-index:2;
+  background:var(--void);
+  text-align:center; overflow:hidden;
+}
+.join-section::before {
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 50%,rgba(201,151,63,.1),transparent 65%);
+  animation:ctaGlow 5s ease-in-out infinite;
+}
+@keyframes ctaGlow {
+  0%,100%{opacity:.5;transform:scale(1);}
+  50%{opacity:1;transform:scale(1.06);}
+}
+.join-inner { position:relative; z-index:1; max-width:780px; margin:0 auto; }
+
+.join-ring {
+  width:120px; height:120px;
+  border:1px solid rgba(201,151,63,.3);
+  border-radius:50%; margin:0 auto 3rem;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  animation:ringPulse 3.5s ease-in-out infinite;
+}
+@keyframes ringPulse {
+  0%,100%{box-shadow:0 0 0 0 rgba(201,151,63,.3);}
+  50%{box-shadow:0 0 0 20px rgba(201,151,63,0);}
+}
+.join-ring::before {
+  content:'';
+  position:absolute; inset:-12px; border-radius:50%;
+  border:1px solid rgba(201,151,63,.12);
+}
+.join-ring-icon { font-size:2.5rem; }
+
+.join-headline {
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,6vw,5rem);
+  font-weight:700; line-height:1.05;
+  margin-bottom:1.5rem; letter-spacing:-.01em;
+}
+.join-headline em { color:var(--gold); font-style:normal; }
+
+.join-sub {
+  font-family:var(--font-body);
+  font-size:1.2rem; line-height:1.8;
+  color:rgba(242,237,228,.55); margin-bottom:3.5rem;
+}
+
+/* Auth card */
+.auth-card {
+  background:var(--coal);
+  border:1px solid rgba(201,151,63,.2);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  text-align:left;
+  position:relative;
+}
+.auth-card::before {
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(to right,var(--ember),var(--gold),var(--gold-lt));
+}
+.auth-tabs {
+  display:flex; background:var(--stone);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.auth-tab {
+  flex:1; background:none; border:none;
+  padding:1.1rem; font-family:var(--font-ui);
+  font-size:.78rem; letter-spacing:.18em;
+  text-transform:uppercase; color:rgba(242,237,228,.4);
+  cursor:none; transition:color .3s,background .3s;
+  position:relative;
+}
+.auth-tab::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:var(--gold); transform:scaleX(0); transition:transform .35s var(--ease-out);
+}
+.auth-tab.on { color:var(--gold); background:rgba(201,151,63,.05); }
+.auth-tab.on::after { transform:scaleX(1); }
+
+.auth-forms { padding:2.5rem; }
+.auth-panel-inner { display:none; animation:slideIn .35s var(--ease-out); }
+.auth-panel-inner.on { display:flex; flex-direction:column; gap:1.2rem; }
+@keyframes slideIn { from{opacity:0;transform:translateX(12px);} to{opacity:1;transform:translateX(0);} }
+
+.auth-heading { font-family:var(--font-body); font-size:1.5rem; font-weight:600; color:var(--cream); }
+.auth-heading span { color:var(--gold); }
+.auth-hint { font-family:var(--font-body); font-size:.95rem; color:rgba(242,237,228,.4); margin-top:.1rem; }
+
+.fgrp { display:flex; flex-direction:column; gap:.4rem; }
+.flbl {
+  font-family:var(--font-ui); font-size:.68rem;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:rgba(242,237,228,.4); font-weight:500;
+}
+.fwrap { position:relative; display:flex; align-items:center; }
+.fico { position:absolute;left:1rem;color:rgba(242,237,228,.2);font-size:.95rem;pointer-events:none;transition:color .3s; }
+.fwrap:focus-within .fico { color:var(--gold); }
+.finput {
+  width:100%;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--radius);
+  color:var(--cream);
+  padding:.9rem 1rem .9rem 2.8rem;
+  font-family:var(--font-body); font-size:1rem;
+  outline:none; transition:border-color .3s,background .3s,box-shadow .3s;
+}
+.finput:focus { border-color:rgba(201,151,63,.55); background:rgba(201,151,63,.04); box-shadow:0 0 0 3px rgba(201,151,63,.1); }
+.finput::placeholder { color:rgba(242,237,228,.18); }
+.finput.err { border-color:rgba(200,70,70,.55); box-shadow:0 0 0 3px rgba(200,70,70,.1); }
+.finput.ok  { border-color:rgba(60,180,100,.45); box-shadow:0 0 0 3px rgba(60,180,100,.08); }
+.ferr { font-family:var(--font-ui);font-size:.7rem;color:#e06060;display:none;animation:errShake .3s; }
+.ferr.on { display:block; }
+@keyframes errShake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-4px);} 75%{transform:translateX(4px);} }
+.pw-btn {
+  position:absolute;right:.9rem;background:none;border:none;
+  color:rgba(242,237,228,.25);cursor:none;font-size:.9rem;
+  padding:.3rem;transition:color .3s;
+}
+.pw-btn:hover { color:var(--gold); }
+
+.str-wrap { display:none; flex-direction:column; gap:.35rem; margin-top:.2rem; }
+.str-wrap.on { display:flex; }
+.str-bar { height:3px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; }
+.str-fill { height:100%; width:0; border-radius:99px; transition:width .4s,background .4s; }
+.str-lbl { font-family:var(--font-ui);font-size:.68rem;color:rgba(242,237,228,.3);letter-spacing:.1em; }
+
+.name-row { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+
+.auth-check { display:flex; align-items:flex-start; gap:.7rem; }
+.auth-check input[type=checkbox] { width:16px;height:16px;accent-color:var(--gold);margin-top:3px;flex-shrink:0;cursor:none; }
+.auth-check label { font-family:var(--font-body);font-size:.95rem;color:rgba(242,237,228,.4);line-height:1.5;cursor:none; }
+.auth-check a { color:var(--gold); }
+
+.auth-or { display:flex;align-items:center;gap:1rem; }
+.auth-or::before,.auth-or::after { content:'';flex:1;height:1px;background:rgba(255,255,255,.07); }
+.auth-or span { font-family:var(--font-ui);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,237,228,.2); }
+
+.social-row { display:grid;grid-template-columns:1fr 1fr;gap:.7rem; }
+.soc-btn {
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--radius); padding:.8rem;
+  font-family:var(--font-ui);font-size:.8rem;
+  color:rgba(242,237,228,.5); cursor:none;
+  transition:background .3s,border-color .3s,color .3s,transform .2s;
+}
+.soc-btn:hover { background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:var(--cream);transform:translateY(-1px); }
+
+.auth-switch-row {
+  text-align:center;font-family:var(--font-body);
+  font-size:.95rem;color:rgba(242,237,228,.3);
+}
+.auth-switch-row button {
+  background:none;border:none;color:var(--gold);cursor:none;
+  font-family:var(--font-body);font-size:.95rem;
+  text-decoration:underline;text-underline-offset:3px;
+  transition:color .3s;
+}
+.auth-switch-row button:hover { color:var(--gold-lt); }
+
+.forgot-btn { background:none;border:none;color:rgba(242,237,228,.25);cursor:none;font-family:var(--font-ui);font-size:.72rem;text-align:right;display:block;width:100%;transition:color .3s;margin-top:-.5rem; }
+.forgot-btn:hover { color:var(--gold); }
+
+.submit-btn {
+  background:var(--gold); color:var(--black); border:none;
+  width:100%; padding:1.05rem;
+  font-family:var(--font-ui);font-weight:600;font-size:.88rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  border-radius:var(--radius); cursor:none;
+  position:relative;overflow:hidden;
+  transition:background .3s,transform .2s,box-shadow .3s;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.submit-btn::after {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,.18) 50%,transparent 70%);
+  transform:translateX(-100%);transition:transform .55s;
+}
+.submit-btn:hover { background:var(--gold-lt);transform:translateY(-1px);box-shadow:0 10px 30px rgba(201,151,63,.4); }
+.submit-btn:hover::after { transform:translateX(100%); }
+.submit-btn.loading { pointer-events:none;opacity:.8; }
+.btn-dots { display:none;gap:4px;align-items:center; }
+.btn-dots span { width:6px;height:6px;background:var(--black);border-radius:50%;animation:bounce .6s ease-in-out infinite; }
+.btn-dots span:nth-child(2){animation-delay:.15s;}
+.btn-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.submit-btn.loading .btn-lbl { display:none; }
+.submit-btn.loading .btn-dots { display:flex; }
+
+/* success screen */
+.success-scr { display:none;flex-direction:column;align-items:center;text-align:center;gap:1.2rem;padding:1rem 0; }
+.success-scr.on { display:flex; }
+.success-icon { width:72px;height:72px;border-radius:50%;background:rgba(60,180,100,.1);border:2px solid rgba(60,180,100,.4);display:flex;align-items:center;justify-content:center;font-size:2rem;animation:pop .5s var(--ease-spring) forwards; }
+@keyframes pop{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-title { font-family:var(--font-display);font-size:1.5rem;color:var(--cream); }
+.success-title span { color:var(--gold); }
+.success-msg { font-family:var(--font-body);font-size:1rem;color:rgba(242,237,228,.5);line-height:1.7;max-width:320px; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  position:relative;z-index:2;
+  background:var(--black);
+  border-top:1px solid rgba(255,255,255,.06);
+  padding:6rem 3.5rem 3rem;
+}
+.footer-inner {
+  max-width:1280px;margin:0 auto;
+  display:grid; grid-template-columns:2.2fr 1fr 1fr 1fr;
+  gap:5rem;
+}
+.footer-brand p { font-family:var(--font-body);font-size:1rem;line-height:1.8;color:rgba(242,237,228,.35);margin-top:1.2rem;max-width:280px; }
+.footer-col h4 { font-family:var(--font-ui);font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem; }
+.footer-col ul { list-style:none;display:flex;flex-direction:column;gap:.7rem; }
+.footer-col a { font-family:var(--font-body);font-size:1rem;color:rgba(242,237,228,.4);transition:color .3s; }
+.footer-col a:hover { color:var(--gold); }
+.footer-bottom {
+  max-width:1280px;margin:4rem auto 0;
+  padding-top:2rem;border-top:1px solid rgba(255,255,255,.05);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-bottom p { font-family:var(--font-ui);font-size:.73rem;color:rgba(242,237,228,.2); }
+.footer-meet-btn {
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:#1a73e8;color:#fff;
+  border:none;padding:.55rem 1.3rem;border-radius:4px;
+  font-family:var(--font-ui);font-size:.75rem;font-weight:600;
+  letter-spacing:.08em;cursor:none;
+  transition:background .3s,transform .2s;text-decoration:none;
+}
+.footer-meet-btn:hover { background:#4285f4;transform:translateY(-1px); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:1100px){
+  .session-section .s-inner { grid-template-columns:1fr; gap:4rem; }
+  .brotherhood-inner { grid-template-columns:1fr; gap:3rem; }
+  .brotherhood-visual { height:380px; }
+  .footer-inner { grid-template-columns:1fr 1fr; gap:3rem; }
+  .pillars-grid { grid-template-columns:1fr 1fr; }
+  .values-grid { grid-template-columns:1fr; }
+}
+@media(max-width:768px){
+  nav { padding:0 1.5rem; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .s-pad { padding:6rem 1.5rem; }
+  .pillars-grid { grid-template-columns:1fr; }
+  .countdown-grid { grid-template-columns:repeat(2,1fr); }
+  .invite-card { padding:2rem 1.5rem; }
+  .name-row { grid-template-columns:1fr; }
+  .prog-row { grid-template-columns:50px 1fr; }
+  .prog-tag { display:none; }
+  .footer-inner { grid-template-columns:1fr; gap:2.5rem; }
+  .footer-bottom { flex-direction:column;gap:1rem;text-align:center; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  .social-row { grid-template-columns:1fr; }
+  .join-headline { font-size:2.5rem; }
+}
+@media(max-width:480px){
+  .live-banner { font-size:.68rem;gap:.5rem; }
+  .hero-title .big { font-size:clamp(4rem,22vw,6rem); }
+  .hero-title .sub { font-size:clamp(1.5rem,8vw,2.5rem); }
+  .countdown-grid { grid-template-columns:repeat(2,1fr); }
+  .cd-num { font-size:2.2rem; }
+  .auth-forms { padding:1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== CURSOR ===== -->
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<!-- ===== CANVAS ===== -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- ===== NOISE ===== -->
+<div class="noise"></div>
+
+<!-- ===== LIVE BANNER ===== -->
+<div class="live-banner" style="position:relative;z-index:200">
+  <span class="live-pulse"><span class="live-dot"></span> LIVE EVERY FRIDAY</span>
+  <span>·</span>
+  <span>19:00 – 20:00 &nbsp;|&nbsp; Google Meet &nbsp;|&nbsp; Rev. TP Sibande</span>
+  <span>·</span>
+  <a class="banner-join" href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" rel="noopener">Join Session →</a>
+</div>
+
+<!-- ===== MOBILE DRAWER ===== -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <button class="mobile-close-btn" id="mobileClose">✕</button>
+  <a href="#about"    onclick="closeDraw()">About</a>
+  <a href="#session"  onclick="closeDraw()">Live Session</a>
+  <a href="#programs" onclick="closeDraw()">Programs</a>
+  <a href="#brothers" onclick="closeDraw()">Brotherhood</a>
+  <a href="#join"     onclick="closeDraw()">Join Free</a>
+  <a href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" style="color:var(--gold);">Join Google Meet 📹</a>
+</div>
+
+<!-- ===== NAV ===== -->
+<nav id="mainNav">
+  <a class="logo-link" href="#">
+    <div class="logo-emblem">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle class="logo-spin" cx="50" cy="50" r="46" stroke="#c9973f" stroke-width="1" stroke-dasharray="5 4" opacity=".5"/>
+        <circle cx="50" cy="50" r="36" fill="rgba(201,151,63,.06)" stroke="#c9973f" stroke-width=".8"/>
+        <circle class="logo-pulse" cx="50" cy="50" r="26" fill="rgba(201,151,63,.08)" stroke="#c9973f" stroke-width=".6"/>
+        <path d="M50 65 C50 65 32 53.5 32 41 C32 33.8 37.8 28 45 28 C47.8 28 50 30 50 32 C50 30 52.2 28 55 28 C62.2 28 68 33.8 68 41 C68 53.5 50 65 50 65Z" fill="#c9973f"/>
+        <line x1="50" y1="14" x2="50" y2="26" stroke="#e2b96a" stroke-width="2" stroke-linecap="round"/>
+        <line x1="86" y1="50" x2="78" y2="50" stroke="#e2b96a" stroke-width="2" stroke-linecap="round"/>
+        <line x1="14" y1="50" x2="22" y2="50" stroke="#e2b96a" stroke-width="2" stroke-linecap="round"/>
+        <line x1="50" y1="86" x2="50" y2="78" stroke="#e2b96a" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="72.5" cy="27.5" r="2.5" fill="#c9973f" opacity=".5"/>
+        <circle cx="27.5" cy="27.5" r="2.5" fill="#c9973f" opacity=".5"/>
+        <circle cx="72.5" cy="72.5" r="2.5" fill="#c9973f" opacity=".5"/>
+        <circle cx="27.5" cy="72.5" r="2.5" fill="#c9973f" opacity=".5"/>
+      </svg>
+    </div>
+    <div class="logo-words">
+      <span class="logo-he">HE</span>
+      <span class="logo-motions">— MOTIONS</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#session">Live Session</a></li>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#brothers">Brotherhood</a></li>
+    <li>
+      <a class="nav-live-btn" href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" rel="noopener">
+        <span class="live-dot"></span> Join Friday Meet
+      </a>
+    </li>
+    <li><a href="#join" onclick="openAuth('signup');return false;" style="background:var(--gold);color:var(--black);padding:.45rem 1.3rem;border-radius:3px;font-weight:600;">Join Free</a></li>
+  </ul>
+
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="about">
+  <div class="hero-rule hero-rule-h"></div>
+  <div class="hero-rule hero-rule-v"></div>
+
+  <div class="hero-badge">
+    <span class="live-dot"></span>
+    Virtual Men's Brotherhood · Est. 2025
+  </div>
+
+  <h1 class="hero-title">
+    <span class="big" data-text="HE">HE</span>
+    <span class="sub">MOTIONS</span>
+  </h1>
+
+  <p class="hero-verse">
+    "Be strong and courageous. Do not be afraid or discouraged,<br>for the Lord your God is with you wherever you go."
+    <cite>— Joshua 1:9</cite>
+  </p>
+
+  <div class="hero-ctas">
+    <a href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" rel="noopener" class="btn-gold">
+      📹 Join Friday's Session
+    </a>
+    <button class="btn-ghost" onclick="openAuth('signup')">
+      Become a Brother →
+    </button>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-wire"></div>
+  </div>
+</section>
+
+<!-- ===== LIVE SESSION ===== -->
+<section class="session-section s-pad" id="session">
+  <div class="s-inner">
+
+    <!-- LEFT: Invite Card -->
+    <div class="invite-card r">
+      <div class="invite-from">
+        <div class="rev-avatar">TS</div>
+        <div class="rev-info">
+          <div class="rev-name">Rev. TP Sibande</div>
+          <div class="rev-title">Facilitator · HE-MOTIONS</div>
+        </div>
+      </div>
+
+      <p class="invite-salutation">Greetings Gentlemen,</p>
+      <p class="invite-body">
+        I trust you are all well. You are warmly invited to our virtual men's gathering titled
+        <strong>"He Motions"</strong>, where we will take a closer look at men's emotions from both a
+        <strong>psychological and biblical perspective</strong>. This promises to be a meaningful and
+        empowering conversation as we create space for growth, healing, and authentic brotherhood.
+      </p>
+
+      <div class="invite-details">
+        <div class="detail-row">
+          <span class="detail-icon">🗓</span>
+          <span><span class="detail-label">Date</span> <strong>Friday, 22 May 2026</strong></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">⏰</span>
+          <span><span class="detail-label">Time</span> <strong>19:00 – 20:00</strong></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">📍</span>
+          <span><span class="detail-label">Platform</span> <strong>Google Meet</strong></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">🔗</span>
+          <span><span class="detail-label">Link</span> <strong>meet.google.com/hqp-uvcq-dzc</strong></span>
+        </div>
+      </div>
+
+      <div class="invite-biblical">
+        <p>"Be strong and courageous. Do not be afraid or discouraged, for the Lord your God is with you wherever you go."</p>
+        <cite>— Joshua 1:9</cite>
+      </div>
+
+      <p class="invite-tagline">
+        "Strong men are not those who hide their emotions, but those who surrender them to God and grow through them."
+      </p>
+
+      <a class="join-meet-btn" href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" rel="noopener">
+        <span class="meet-icon">📹</span>
+        Join Google Meet — Friday 19:00
+      </a>
+    </div>
+
+    <!-- RIGHT: Countdown -->
+    <div class="countdown-panel">
+      <span class="overline r">Next Session Countdown</span>
+      <h2 class="headline r d1">This <em>Friday</em><br>Don't Miss It</h2>
+      <p class="next-session-label r d2">Every Friday · 19:00 – 20:00 SAST</p>
+
+      <div class="countdown-grid r d3">
+        <div class="cd-box"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div>
+        <div class="cd-box"><span class="cd-num" id="cd-h">00</span><span class="cd-label">Hours</span></div>
+        <div class="cd-box"><span class="cd-num" id="cd-m">00</span><span class="cd-label">Minutes</span></div>
+        <div class="cd-box"><span class="cd-num" id="cd-s">00</span><span class="cd-label">Seconds</span></div>
+      </div>
+
+      <div class="session-meta r d4">
+        <div class="meta-item">
+          <span class="meta-icon">📅</span>
+          <div class="meta-text">Recurring every <strong>Friday</strong></div>
+          <span class="meta-badge">Weekly</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon">⏱</span>
+          <div class="meta-text"><strong>19:00 – 20:00</strong> South Africa Standard Time</div>
+          <span class="meta-badge">1 Hour</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon">🌍</span>
+          <div class="meta-text">Open to all men <strong>worldwide</strong></div>
+          <span class="meta-badge">Free</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon">🤝</span>
+          <div class="meta-text">Bring a <strong>friend or two</strong></div>
+          <span class="meta-badge">Invite</span>
+        </div>
+      </div>
+
+      <a class="btn-gold r d5" href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" rel="noopener" style="align-self:flex-start">
+        📹 &nbsp;Open Google Meet
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PILLARS ===== -->
+<section class="pillars-section s-pad" id="pillars">
+  <div class="s-inner">
+    <div class="pillars-header">
+      <span class="overline r">Our Foundation</span>
+      <h2 class="headline r d1">Three Pillars of the <em>Brotherhood</em></h2>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card r d1" data-num="01">
+        <div class="pillar-icon-wrap">❤️</div>
+        <h3>Vulnerability</h3>
+        <p>Strength is not the absence of emotion — it is the courage to feel. Here, every man is free to be fully human, without judgment and without masks.</p>
+      </div>
+      <div class="pillar-card r d2" data-num="02">
+        <div class="pillar-icon-wrap">🤝</div>
+        <h3>Brotherhood</h3>
+        <p>No man is an island. We grow stronger together — lifting each other, holding each other accountable, walking the narrow path side by side.</p>
+      </div>
+      <div class="pillar-card r d3" data-num="03">
+        <div class="pillar-icon-wrap">✝️</div>
+        <h3>Faith & Growth</h3>
+        <p>We explore emotions from both psychological and biblical perspectives, surrendering our struggles to God and emerging as better men, fathers, and leaders.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUOTE ===== -->
+<section class="quote-section s-pad">
+  <div class="s-inner">
+    <div class="quote-inner">
+      <div class="quote-bar r"></div>
+      <p class="pull-quote r d1">
+        "Strong men are not those who hide their emotions, but those who <strong>surrender them to God</strong> and grow through them."
+      </p>
+      <p class="quote-attr r d2">— Rev. TP Sibande · HE-MOTIONS</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROGRAMS ===== -->
+<section class="programs-section s-pad" id="programs">
+  <div class="s-inner">
+    <div class="programs-header">
+      <span class="overline r">What We Offer</span>
+      <h2 class="headline r d1">Programs Built for <em>Real Men</em></h2>
+    </div>
+    <div class="prog-list">
+      <div class="prog-row r">
+        <div class="prog-n">01</div>
+        <div class="prog-info">
+          <h3>Friday Circle Sessions</h3>
+          <p>Weekly virtual gatherings via Google Meet where men speak freely in a confidential, Spirit-led space.</p>
+        </div>
+        <span class="prog-tag">Every Friday</span>
+      </div>
+      <div class="prog-row r d1">
+        <div class="prog-n">02</div>
+        <div class="prog-info">
+          <h3>Psychological & Biblical Insight</h3>
+          <p>We bridge mental health and Scripture — bringing whole-person healing through two powerful lenses.</p>
+        </div>
+        <span class="prog-tag">Weekly</span>
+      </div>
+      <div class="prog-row r d2">
+        <div class="prog-n">03</div>
+        <div class="prog-info">
+          <h3>The Forge — Mentorship</h3>
+          <p>One-on-one pairing with experienced brothers who have walked the path and can guide yours.</p>
+        </div>
+        <span class="prog-tag">Ongoing</span>
+      </div>
+      <div class="prog-row r d3">
+        <div class="prog-n">04</div>
+        <div class="prog-info">
+          <h3>Anonymous Voices</h3>
+          <p>Share your story anonymously. Write it, record it, speak it — your truth can free someone else's.</p>
+        </div>
+        <span class="prog-tag">24 / 7</span>
+      </div>
+      <div class="prog-row r d4">
+        <div class="prog-n">05</div>
+        <div class="prog-info">
+          <h3>Growth Library</h3>
+          <p>Curated books, podcasts, and devotionals around emotional intelligence, leadership, and fatherhood.</p>
+        </div>
+        <span class="prog-tag">Always On</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BROTHERHOOD ===== -->
+<section class="brotherhood-section s-pad" id="brothers">
+  <div class="s-inner">
+    <div class="brotherhood-inner">
+      <!-- Visual -->
+      <div class="brotherhood-visual r">
+        <div class="brotherhood-visual-bg"></div>
+
+        <!-- SVG connecting lines (animated) -->
+        <svg class="node-svg" viewBox="0 0 500 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="250" y1="120" x2="145" y2="210" stroke="rgba(201,151,63,.15)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" from="0" to="20" dur="2s" repeatCount="indefinite"/></line>
+          <line x1="250" y1="120" x2="355" y2="210" stroke="rgba(201,151,63,.15)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" from="20" to="0" dur="2.5s" repeatCount="indefinite"/></line>
+          <line x1="145" y1="210" x2="100" y2="340" stroke="rgba(201,151,63,.1)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" from="0" to="20" dur="3s" repeatCount="indefinite"/></line>
+          <line x1="355" y1="210" x2="400" y2="340" stroke="rgba(201,151,63,.1)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" from="20" to="0" dur="2.8s" repeatCount="indefinite"/></line>
+          <line x1="145" y1="210" x2="250" y2="390" stroke="rgba(201,151,63,.07)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" from="0" to="20" dur="3.5s" repeatCount="indefinite"/></line>
+          <line x1="355" y1="210" x2="250" y2="390" stroke="rgba(201,151,63,.07)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" from="0" to="20" dur="3.2s" repeatCount="indefinite"/></line>
+          <line x1="100" y1="340" x2="250" y2="390" stroke="rgba(201,151,63,.07)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" from="10" to="30" dur="4s" repeatCount="indefinite"/></line>
+          <line x1="400" y1="340" x2="250" y2="390" stroke="rgba(201,151,63,.07)" stroke-width="1" stroke-dasharray="5 5"><animate attributeName="stroke-dashoffset" from="10" to="30" dur="3.8s" repeatCount="indefinite"/></line>
+        </svg>
+
+        <div class="avatars-field">
+          <div class="av xl" style="top:60px;left:50%;transform:translateX(-50%);animation-delay:0s">M</div>
+          <div class="av lg" style="top:155px;left:18%;animation-delay:-1.5s">K</div>
+          <div class="av lg" style="top:155px;right:18%;animation-delay:-3s">J</div>
+          <div class="av md" style="top:285px;left:7%;animation-delay:-2s">T</div>
+          <div class="av md" style="top:285px;left:35%;animation-delay:-4s">D</div>
+          <div class="av md" style="top:285px;right:25%;animation-delay:-1s">R</div>
+          <div class="av md" style="top:285px;right:5%;animation-delay:-3.5s">A</div>
+          <div class="av sm" style="top:385px;left:22%;animation-delay:-2.5s">S</div>
+          <div class="av lg" style="top:375px;left:50%;transform:translateX(-50%);animation-delay:-5s">L</div>
+          <div class="av sm" style="top:385px;right:18%;animation-delay:-1.8s">N</div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div>
+        <span class="overline r">The Brotherhood</span>
+        <h2 class="headline r d1">You Are <em>Not Alone</em><br>in This</h2>
+        <p class="body-text r d2" style="margin:1.5rem 0 2.5rem">
+          Thousands of men across the globe have found their tribe here — men of every background, age, and walk of life — unified by one desire: to be better.
+        </p>
+        <div class="stats-grid r d3">
+          <div class="stat-card"><div class="stat-num" id="s1">0</div><div class="stat-lbl">Active Brothers</div></div>
+          <div class="stat-card"><div class="stat-num" id="s2">0</div><div class="stat-lbl">Countries</div></div>
+          <div class="stat-card"><div class="stat-num" id="s3">0</div><div class="stat-lbl">Sessions Held</div></div>
+          <div class="stat-card"><div class="stat-num" id="s4">0</div><div class="stat-lbl">Stories Shared</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testimonials-section s-pad">
+  <div class="s-inner">
+    <span class="overline r">Real Voices</span>
+    <h2 class="headline r d1">Words from the <em>Brotherhood</em></h2>
+  </div>
+  <div class="track-wrap" style="margin-top:3.5rem">
+    <div class="track">
+      <!-- 6 cards × 2 for infinite scroll -->
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"I came here broken. I leave every session feeling like someone actually sees me. For the first time, I have men I can call at 2am."</p><div class="t-author"><div class="t-avatar">MP</div><div><div class="t-name">Marcus P.</div><div class="t-role">Father of 2 · Johannesburg</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"I was taught that men don't cry. HE-MOTIONS taught me that men who don't cry carry a weight that breaks everything around them."</p><div class="t-author"><div class="t-avatar">KA</div><div><div class="t-name">Kwame A.</div><div class="t-role">Entrepreneur · Accra</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"The Friday sessions changed how I show up in my marriage. I'm a better husband because I learned to be honest with myself first."</p><div class="t-author"><div class="t-avatar">DM</div><div><div class="t-name">David M.</div><div class="t-role">Engineer · Nairobi</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"Combining scripture with psychology was exactly what I needed. This isn't just a men's group — it's a ministry and a lifeline."</p><div class="t-author"><div class="t-avatar">TR</div><div><div class="t-name">Thabo R.</div><div class="t-role">Teacher · Cape Town</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"Rev. Sibande creates a safe container where men can be raw, real and unfiltered. I've never experienced anything like it."</p><div class="t-author"><div class="t-avatar">JL</div><div><div class="t-name">James L.</div><div class="t-role">Physician · Lagos</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"I joined on a Friday night not knowing anyone. I left with brothers. The Google Meet session literally saved my relationship."</p><div class="t-author"><div class="t-avatar">RN</div><div><div class="t-name">Ruan N.</div><div class="t-role">Student · Pretoria</div></div></div></div>
+      <!-- duplicates -->
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"I came here broken. I leave every session feeling like someone actually sees me. For the first time, I have men I can call at 2am."</p><div class="t-author"><div class="t-avatar">MP</div><div><div class="t-name">Marcus P.</div><div class="t-role">Father of 2 · Johannesburg</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"I was taught that men don't cry. HE-MOTIONS taught me that men who don't cry carry a weight that breaks everything around them."</p><div class="t-author"><div class="t-avatar">KA</div><div><div class="t-name">Kwame A.</div><div class="t-role">Entrepreneur · Accra</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"The Friday sessions changed how I show up in my marriage. I'm a better husband because I learned to be honest with myself first."</p><div class="t-author"><div class="t-avatar">DM</div><div><div class="t-name">David M.</div><div class="t-role">Engineer · Nairobi</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"Combining scripture with psychology was exactly what I needed. This isn't just a men's group — it's a ministry and a lifeline."</p><div class="t-author"><div class="t-avatar">TR</div><div><div class="t-name">Thabo R.</div><div class="t-role">Teacher · Cape Town</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"Rev. Sibande creates a safe container where men can be raw, real and unfiltered. I've never experienced anything like it."</p><div class="t-author"><div class="t-avatar">JL</div><div><div class="t-name">James L.</div><div class="t-role">Physician · Lagos</div></div></div></div>
+      <div class="t-card"><div class="t-stars">★★★★★</div><p class="t-text">"I joined on a Friday night not knowing anyone. I left with brothers. The Google Meet session literally saved my relationship."</p><div class="t-author"><div class="t-avatar">RN</div><div><div class="t-name">Ruan N.</div><div class="t-role">Student · Pretoria</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VALUES ===== -->
+<section class="values-section s-pad">
+  <div class="s-inner">
+    <span class="overline r">How We Live</span>
+    <h2 class="headline r d1" style="margin-bottom:4rem">Our Core <em>Commitments</em></h2>
+    <div class="values-grid">
+      <div class="value-item r">
+        <span class="value-num">01</span>
+        <h3>Radical Honesty</h3>
+        <p>We speak truth — about our pain, our failures, our fears. No performance, no masks. Authenticity is our highest honour.</p>
+      </div>
+      <div class="value-item r d1">
+        <span class="value-num">02</span>
+        <h3>Spiritual Grounding</h3>
+        <p>We anchor every session in Scripture. God's word is our compass and His grace is our foundation for change.</p>
+      </div>
+      <div class="value-item r d2">
+        <span class="value-num">03</span>
+        <h3>Confidentiality</h3>
+        <p>What is shared in the circle stays in the circle. Every man's story is sacred and deserves absolute protection.</p>
+      </div>
+      <div class="value-item r d3">
+        <span class="value-num">04</span>
+        <h3>Accountability</h3>
+        <p>We don't just listen — we challenge one another to grow, follow through, and become the men God called us to be.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== JOIN / AUTH ===== -->
+<section class="join-section s-pad" id="join">
+  <div class="s-inner">
+    <div class="join-inner">
+      <div class="join-ring r">
+        <span class="join-ring-icon">✝️</span>
+      </div>
+      <h2 class="join-headline r d1">Your Journey<br>Starts <em>Here</em></h2>
+      <p class="join-sub r d2">
+        Join thousands of men choosing to show up differently — for themselves, their families, their God, and their world.
+      </p>
+
+      <div class="auth-card r d3">
+        <div class="auth-tabs">
+          <button class="auth-tab on" id="tab-si" onclick="openAuth('signin')">Sign In</button>
+          <button class="auth-tab"    id="tab-su" onclick="openAuth('signup')">Join Free</button>
+        </div>
+        <div class="auth-forms">
+
+          <!-- SIGN IN -->
+          <div class="auth-panel-inner on" id="panel-si">
+            <div>
+              <p class="auth-heading">Welcome <span>back,</span> brother.</p>
+              <p class="auth-hint">Sign in to continue your journey.</p>
+            </div>
+            <div class="fgrp">
+              <label class="flbl">Email Address</label>
+              <div class="fwrap"><span class="fico">✉</span><input class="finput" id="si-em" type="email" placeholder="your@email.com" autocomplete="email"></div>
+              <span class="ferr" id="si-em-e">Please enter a valid email address.</span>
+            </div>
+            <div class="fgrp">
+              <label class="flbl">Password</label>
+              <div class="fwrap"><span class="fico">🔒</span><input class="finput" id="si-pw" type="password" placeholder="Your password" autocomplete="current-password"><button class="pw-btn" onclick="togglePw('si-pw',this)">👁</button></div>
+              <span class="ferr" id="si-pw-e">Password must be at least 6 characters.</span>
+            </div>
+            <button class="forgot-btn" onclick="showForgot()">Forgot password?</button>
+            <button class="submit-btn" id="si-sub" onclick="doSignIn()">
+              <span class="btn-lbl">Sign In</span>
+              <div class="btn-dots"><span></span><span></span><span></span></div>
+            </button>
+            <div class="auth-or"><span>or</span></div>
+            <div class="social-row">
+              <button class="soc-btn" onclick="socialLogin('Google')">🔵 Google</button>
+              <button class="soc-btn" onclick="socialLogin('Facebook')">🔷 Facebook</button>
+            </div>
+            <p class="auth-switch-row">Not a member? <button onclick="openAuth('signup')">Join the Brotherhood →</button></p>
+            <div class="success-scr" id="si-ok">
+              <div class="success-icon">✓</div>
+              <p class="success-title">Welcome <span>back!</span></p>
+              <p class="success-msg">You're signed in. Your brotherhood awaits.</p>
+              <a class="btn-gold" href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" style="margin-top:.5rem;display:inline-flex">📹 Join Friday's Session</a>
+            </div>
+          </div>
+
+          <!-- SIGN UP -->
+          <div class="auth-panel-inner" id="panel-su">
+            <div>
+              <p class="auth-heading">Step into the <span>Brotherhood.</span></p>
+              <p class="auth-hint">Free forever. No judgment. Just growth.</p>
+            </div>
+            <div class="name-row">
+              <div class="fgrp">
+                <label class="flbl">First Name</label>
+                <div class="fwrap"><span class="fico">👤</span><input class="finput" id="su-fn" type="text" placeholder="James" autocomplete="given-name"></div>
+                <span class="ferr" id="su-fn-e">Please enter your first name.</span>
+              </div>
+              <div class="fgrp">
+                <label class="flbl">Last Name</label>
+                <div class="fwrap"><span class="fico">👤</span><input class="finput" id="su-ln" type="text" placeholder="Mokoena" autocomplete="family-name"></div>
+                <span class="ferr" id="su-ln-e">Please enter your last name.</span>
+              </div>
+            </div>
+            <div class="fgrp">
+              <label class="flbl">Email Address</label>
+              <div class="fwrap"><span class="fico">✉</span><input class="finput" id="su-em" type="email" placeholder="your@email.com" autocomplete="email"></div>
+              <span class="ferr" id="su-em-e">Please enter a valid email address.</span>
+            </div>
+            <div class="fgrp">
+              <label class="flbl">Create Password</label>
+              <div class="fwrap"><span class="fico">🔒</span><input class="finput" id="su-pw" type="password" placeholder="Min. 8 characters" autocomplete="new-password" oninput="pwStrength(this.value)"><button class="pw-btn" onclick="togglePw('su-pw',this)">👁</button></div>
+              <div class="str-wrap" id="str-wrap"><div class="str-bar"><div class="str-fill" id="str-fill"></div></div><span class="str-lbl" id="str-lbl">Too short</span></div>
+              <span class="ferr" id="su-pw-e">Password must be at least 8 characters.</span>
+            </div>
+            <div class="auth-check">
+              <input type="checkbox" id="su-ag">
+              <label for="su-ag">I agree to the <a href="#">Terms of Brotherhood</a> and <a href="#">Privacy Policy</a>. I understand this is a safe, confidential, Spirit-led space.</label>
+            </div>
+            <span class="ferr" id="su-ag-e">Please accept the terms to continue.</span>
+            <button class="submit-btn" id="su-sub" onclick="doSignUp()">
+              <span class="btn-lbl">Join the Brotherhood</span>
+              <div class="btn-dots"><span></span><span></span><span></span></div>
+            </button>
+            <div class="auth-or"><span>or sign up with</span></div>
+            <div class="social-row">
+              <button class="soc-btn" onclick="socialLogin('Google')">🔵 Google</button>
+              <button class="soc-btn" onclick="socialLogin('Facebook')">🔷 Facebook</button>
+            </div>
+            <p class="auth-switch-row">Already a member? <button onclick="openAuth('signin')">Sign In →</button></p>
+            <div class="success-scr" id="su-ok">
+              <div class="success-icon">✓</div>
+              <p class="success-title">Welcome to <span>HE-MOTIONS!</span></p>
+              <p class="success-msg" id="su-ok-msg">You've joined the brotherhood. Your journey starts now.</p>
+              <a class="btn-gold" href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" style="margin-top:.5rem;display:inline-flex">📹 Join Friday's Session</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="logo-link" href="#">
+        <div class="logo-emblem" style="width:40px;height:40px">
+          <svg viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="46" stroke="#c9973f" stroke-width="1" stroke-dasharray="5 4" opacity=".4"/>
+            <path d="M50 65 C50 65 32 53.5 32 41 C32 33.8 37.8 28 45 28 C47.8 28 50 30 50 32 C50 30 52.2 28 55 28 C62.2 28 68 33.8 68 41 C68 53.5 50 65 50 65Z" fill="#c9973f" opacity=".8"/>
+          </svg>
+        </div>
+        <div class="logo-words">
+          <span class="logo-he" style="font-size:1.3rem">HE</span>
+          <span class="logo-motions" style="font-size:.6rem">— MOTIONS</span>
+        </div>
+      </a>
+      <p>A global brotherhood where men explore emotions through psychological and biblical wisdom — every Friday, 19:00–20:00, on Google Meet. Facilitated by Rev. TP Sibande.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="#session">Live Sessions</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#brothers">Brotherhood</a></li>
+        <li><a href="https://meet.google.com/hqp-uvcq-dzc" target="_blank">Google Meet</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Community</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Facilitators</a></li>
+        <li><a href="#">Testimonials</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">Podcast</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 HE-MOTIONS. Facilitated by Rev. TP Sibande. All rights reserved.</p>
+    <a class="footer-meet-btn" href="https://meet.google.com/hqp-uvcq-dzc" target="_blank" rel="noopener">
+      📹 &nbsp;Join Friday Meet
+    </a>
+  </div>
+</footer>
+
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script>
+/* ---- CURSOR ---- */
+const dot = document.getElementById('cur-dot');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function raf(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(raf);})();
+
+/* ---- PARTICLE CANVAS ---- */
+const canvas=document.getElementById('particles-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+class Pt{
+  constructor(){this.reset();}
+  reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.5+.3;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.a=Math.random();}
+  update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset();}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(201,151,63,${this.a*.4})`;ctx.fill();}
+}
+for(let i=0;i<120;i++)pts.push(new Pt());
+function drawPts(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{p.update();p.draw();});
+  pts.forEach((a,i)=>{
+    pts.slice(i+1).forEach(b=>{
+      const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(201,151,63,${.08*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke();}
+    });
+  });
+  requestAnimationFrame(drawPts);
+}
+drawPts();
+
+/* ---- NAV SCROLL ---- */
+const nav=document.getElementById('mainNav');
+let bannerH=document.querySelector('.live-banner').offsetHeight;
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>bannerH+20){nav.style.top='0';nav.classList.add('scrolled');}
+  else{nav.classList.remove('scrolled');}
+});
+// Push nav below banner
+nav.style.top = bannerH+'px';
+window.addEventListener('resize',()=>{bannerH=document.querySelector('.live-banner').offsetHeight;nav.style.top=bannerH+'px';});
+
+/* ---- HAMBURGER ---- */
+const hbg=document.getElementById('hamburger');
+const drawer=document.getElementById('mobileDrawer');
+hbg.addEventListener('click',()=>{hbg.classList.toggle('open');drawer.classList.toggle('open');});
+document.getElementById('mobileClose').addEventListener('click',closeDraw);
+function closeDraw(){hbg.classList.remove('open');drawer.classList.remove('open');}
+
+/* ---- SCROLL REVEAL ---- */
+const reveals=document.querySelectorAll('.r');
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.12});
+reveals.forEach(el=>ro.observe(el));
+
+/* ---- COUNTDOWN to next Friday 19:00 SAST (UTC+2) ---- */
+function nextFriday(){
+  const now=new Date();
+  const sast=new Date(now.toLocaleString('en-US',{timeZone:'Africa/Johannesburg'}));
+  const day=sast.getDay(); // 0=Sun,5=Fri
+  const daysUntil=(5-day+7)%7||(sast.getHours()<19?0:7);
+  const target=new Date(sast);
+  target.setDate(sast.getDate()+daysUntil);
+  target.setHours(19,0,0,0);
+  return new Date(target.getTime()-(sast.getTimezoneOffset()*60000));
+}
+function updateCd(){
+  const diff=nextFriday()-new Date();
+  if(diff<=0){document.getElementById('cd-d').textContent='00';document.getElementById('cd-h').textContent='00';document.getElementById('cd-m').textContent='00';document.getElementById('cd-s').textContent='00';return;}
+  const d=Math.floor(diff/864e5),h=Math.floor((diff%864e5)/36e5),m=Math.floor((diff%36e5)/6e4),s=Math.floor((diff%6e4)/1000);
+  document.getElementById('cd-d').textContent=String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+}
+updateCd();setInterval(updateCd,1000);
+
+/* ---- COUNTER ANIMATION ---- */
+function animCount(el,target,suf){
+  let v=0;const dur=2200;const t0=performance.now();
+  (function fr(now){const p=Math.min((now-t0)/dur,1);const e=1-Math.pow(1-p,3);v=Math.floor(e*target);el.textContent=v.toLocaleString()+suf;if(p<1)requestAnimationFrame(fr);})(performance.now());
+}
+const ctrs=[{id:'s1',val:4200,s:'+'},{id:'s2',val:38,s:''},{id:'s3',val:890,s:'+'},{id:'s4',val:12400,s:'+'}];
+const cro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){ctrs.forEach(c=>animCount(document.getElementById(c.id),c.val,c.s));cro.disconnect();}}),{threshold:.3});
+cro.observe(document.querySelector('.stats-grid'));
+
+/* ---- AUTH ---- */
+function openAuth(tab){
+  document.getElementById('panel-si').classList.remove('on');
+  document.getElementById('panel-su').classList.remove('on');
+  document.getElementById('si-ok').classList.remove('on');
+  document.getElementById('su-ok').classList.remove('on');
+  document.getElementById('tab-si').classList.remove('on');
+  document.getElementById('tab-su').classList.remove('on');
+  clearErrs();
+  if(tab==='signin'){document.getElementById('tab-si').classList.add('on');document.getElementById('panel-si').classList.add('on');}
+  else{document.getElementById('tab-su').classList.add('on');document.getElementById('panel-su').classList.add('on');}
+  document.getElementById('join').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function isEm(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
+function showErr(fid,eid){document.getElementById(fid).classList.add('err');const e=document.getElementById(eid);e.classList.add('on');setTimeout(()=>e.classList.remove('on'),3200);}
+function clearErrs(){document.querySelectorAll('.finput').forEach(i=>i.classList.remove('err','ok'));document.querySelectorAll('.ferr').forEach(e=>e.classList.remove('on'));}
+function togglePw(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'👁':'🙈';}
+function pwStrength(v){
+  const w=document.getElementById('str-wrap'),f=document.getElementById('str-fill'),l=document.getElementById('str-lbl');
+  if(!v){w.classList.remove('on');return;}w.classList.add('on');
+  let sc=0;if(v.length>=8)sc++;if(/[A-Z]/.test(v))sc++;if(/[0-9]/.test(v))sc++;if(/[^A-Za-z0-9]/.test(v))sc++;
+  const lv=[{w:'20%',c:'#e06060',t:'Too weak'},{w:'45%',c:'#e09040',t:'Weak'},{w:'70%',c:'#d4a547',t:'Good'},{w:'100%',c:'#4caf7d',t:'Strong 💪'}];
+  const lvi=lv[Math.max(0,sc-1)];f.style.width=lvi.w;f.style.background=lvi.c;l.textContent=lvi.t;l.style.color=lvi.c;
+}
+function loading(btnId,on){const b=document.getElementById(btnId);b.classList.toggle('loading',on);}
+function doSignIn(){
+  clearErrs();let ok=true;
+  if(!isEm(document.getElementById('si-em').value.trim())){showErr('si-em','si-em-e');ok=false;}
+  if(document.getElementById('si-pw').value.length<6){showErr('si-pw','si-pw-e');ok=false;}
+  if(!ok)return;
+  loading('si-sub',true);
+  setTimeout(()=>{loading('si-sub',false);document.getElementById('panel-si').querySelector('.auth-heading').style.display='none';document.getElementById('si-ok').classList.add('on');},1800);
+}
+function doSignUp(){
+  clearErrs();let ok=true;
+  if(!document.getElementById('su-fn').value.trim()){showErr('su-fn','su-fn-e');ok=false;}
+  if(!document.getElementById('su-ln').value.trim()){showErr('su-ln','su-ln-e');ok=false;}
+  if(!isEm(document.getElementById('su-em').value.trim())){showErr('su-em','su-em-e');ok=false;}
+  if(document.getElementById('su-pw').value.length<8){showErr('su-pw','su-pw-e');ok=false;}
+  if(!document.getElementById('su-ag').checked){showErr('su-ag','su-ag-e');ok=false;}
+  if(!ok)return;
+  loading('su-sub',true);
+  const fn=document.getElementById('su-fn').value.trim();
+  setTimeout(()=>{loading('su-sub',false);document.getElementById('su-ok-msg').textContent=`Welcome, ${fn}! You've joined thousands of men choosing to grow. See you Friday at 19:00!`;document.getElementById('su-ok').classList.add('on');document.getElementById('panel-su').querySelectorAll('.fgrp,.name-row,.auth-check,.auth-or,.social-row,.auth-switch-row,.auth-heading,.auth-hint,.ferr,.forgot-btn').forEach(el=>el.style.display='none');},2000);
+}
+function showForgot(){
+  const p=document.getElementById('panel-si');
+  p.innerHTML=`<div><p class="auth-heading">Reset your <span>Password.</span></p><p class="auth-hint">We'll send a link to your inbox.</p></div><div class="fgrp"><label class="flbl">Email Address</label><div class="fwrap"><span class="fico">✉</span><input class="finput" id="fg-em" type="email" placeholder="your@email.com"></div><span class="ferr" id="fg-em-e">Please enter a valid email.</span></div><button class="submit-btn" onclick="doForgot()"><span class="btn-lbl">Send Reset Link</span><div class="btn-dots"><span></span><span></span><span></span></div></button><p class="auth-switch-row"><button onclick="openAuth('signin')">← Back to Sign In</button></p>`;
+}
+function doForgot(){
+  const em=document.getElementById('fg-em');
+  if(!isEm(em.value.trim())){em.classList.add('err');return;}
+  const btn=document.querySelector('#panel-si .submit-btn');btn.classList.add('loading');
+  setTimeout(()=>{document.getElementById('panel-si').innerHTML=`<div class="success-scr on"><div class="success-icon">✉</div><p class="success-title">Check your <span>inbox!</span></p><p class="success-msg">A reset link has been sent to ${em.value.trim()}.</p><button class="btn-gold" onclick="openAuth('signin')" style="margin-top:.5rem;border:none;cursor:none;">← Back to Sign In</button></div>`;},1600);
+}
+function socialLogin(p){
+  const panel=document.querySelector('.auth-panel-inner.on');
+  if(!panel)return;
+  panel.querySelectorAll('.fgrp,.name-row,.auth-check,.auth-or,.social-row,.auth-switch-row,.auth-heading,.auth-hint,.ferr,.forgot-btn').forEach(el=>el.style.display='none');
+  const ok=panel.querySelector('.success-scr');
+  if(ok){ok.querySelector('.success-title').innerHTML=`Signed in with <span>${p}!</span>`;ok.querySelector('.success-msg').textContent='Welcome to the brotherhood!';ok.classList.add('on');}
+}
+window.openAuth=openAuth;window.togglePw=togglePw;window.pwStrength=pwStrength;window.doSignIn=doSignIn;window.doSignUp=doSignUp;window.showForgot=showForgot;window.doForgot=doForgot;window.socialLogin=socialLogin;window.closeDraw=closeDraw;
+</script>
+</body>
+</html>
